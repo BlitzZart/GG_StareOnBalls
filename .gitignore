@@ -31,3 +31,6 @@ sysinfo.txt
 
 # Tobii dlls
 *.dll
+
+#material
+sky01.mat

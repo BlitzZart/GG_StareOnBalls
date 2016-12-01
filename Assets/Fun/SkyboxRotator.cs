@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class skybox_rotator : MonoBehaviour {
+public class SkyboxRotator : MonoBehaviour {
     private Material skybox;
 
     // Use this for initialization
