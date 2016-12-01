@@ -32,6 +32,10 @@ public class BallServer : NetworkBehaviour {
         }
 	}
 
+    public void SpawnObject(GameObject toSpawn, Vector3 pos) {
+        GameObject go = (GameObject)Instantiate(toSpawn, pos, toSpawn.transform.rotation);
+        NetworkServer.Spawn(go);
+    }
 
     private void StartUpHost() {
         for (int i = 0; i < 5; i++) {

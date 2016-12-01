@@ -7,22 +7,22 @@ public class NetworkPlayer : NetworkBehaviour {
     public float speed = 1.0f;
 
     #region unity callbacks
-    void Start () {
+    void Start() {
         if (!isServer && hasAuthority) {
             Transform camTrans = Camera.main.transform;
             camTrans.rotation = Quaternion.Euler(50, 180, 0);
             camTrans.position = new Vector3(camTrans.position.x, camTrans.position.y, -camTrans.position.z);
         }
-	}
-	
-	void Update () {
-	
-	}
+    }
+
+    void Update() {
+
+    }
     #endregion
 
-    #region private
-    private void UsePowerUp(PowerUpType type) {
-        
+    #region public
+    public void UsePowerUp(PowerUpType type) {
+        PowerUpFactory.ActivatePowerUp(type);
     }
     #endregion
 
@@ -33,8 +33,14 @@ public class NetworkPlayer : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdPowerUp(PowerUpType type) {
+    public void CmdUsePowerUpOnEnemy(PowerUpType type) {
         UsePowerUp(type);
+    }
+
+    [ClientRpc]
+    public void RpcUsePowerUpOnEnemy(PowerUpType type) {
+        if(!isServer)
+            UsePowerUp(type);
     }
     #endregion
 }
