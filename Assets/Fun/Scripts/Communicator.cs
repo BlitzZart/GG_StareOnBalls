@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class Communicator : MonoBehaviour {
-
     private static NetworkPlayer player;
     public static NetworkPlayer Player
     {

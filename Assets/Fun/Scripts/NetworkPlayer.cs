@@ -6,8 +6,8 @@ public class NetworkPlayer : NetworkBehaviour {
 
     public float speed = 1.0f;
 
-	// Use this for initialization
-	void Start () {
+    #region unity callbacks
+    void Start () {
         if (!isServer && hasAuthority) {
             Transform camTrans = Camera.main.transform;
             camTrans.rotation = Quaternion.Euler(50, 180, 0);
@@ -15,13 +15,26 @@ public class NetworkPlayer : NetworkBehaviour {
         }
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}
+    #endregion
 
+    #region private
+    private void UsePowerUp(PowerUpType type) {
+        
+    }
+    #endregion
+
+    #region network
     [Command]
     public void CmdHasFocus(int ballNumber) {
         BallServer.Instace.balls[ballNumber].transform.Translate(0, 0, -speed * Time.deltaTime);
     }
+
+    [Command]
+    public void CmdPowerUp(PowerUpType type) {
+        UsePowerUp(type);
+    }
+    #endregion
 }
