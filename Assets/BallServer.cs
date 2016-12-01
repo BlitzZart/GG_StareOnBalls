@@ -3,18 +3,22 @@ using System.Collections;
 using UnityEngine.Networking;
 
 public class BallServer : NetworkBehaviour {
-    private BallServer instance;
-    //public BallServer Instace
+    private static BallServer instance;
+    public static BallServer Instace
+    {
+        get { return instance; }
+    }
 
-
+    public MoveOnLook[] balls;
     public GameObject ballPrefab;
     bool started = false;
 
-    
+    void Awake() {
+        instance = this;
+    }
 
     // Use this for initialization
     void Start () {
-
 
     }
 
@@ -29,9 +33,12 @@ public class BallServer : NetworkBehaviour {
 
 
     private void StartUpHost() {
-
         for (int i = 0; i < 5; i++) {
             GameObject obj = Instantiate(ballPrefab, ballPrefab.transform.position + i * Vector3.right * 3.5f, Quaternion.identity) as GameObject;
+
+            MoveOnLook nb = obj.GetComponent<MoveOnLook>();
+            nb.number = i;
+
             NetworkServer.Spawn(obj);
         }
     }

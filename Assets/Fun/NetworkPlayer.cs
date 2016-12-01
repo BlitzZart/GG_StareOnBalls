@@ -4,19 +4,16 @@ using UnityEngine.Networking;
 
 public class NetworkPlayer : NetworkBehaviour {
 
-    public Transform testBall;
-
-    private MoveOnLook[] balls;
+    public float speed = 1.0f;
 
 	// Use this for initialization
 	void Start () {
-        if (isClient) {
+        if (hasAuthority) {
             Transform camTrans = Camera.main.transform;
             camTrans.rotation = Quaternion.Euler(50, 180, 0);
             camTrans.position = new Vector3(camTrans.position.x, camTrans.position.y, -camTrans.position.z);
+            speed = -speed;
         }
-
-
 	}
 	
 	// Update is called once per frame
@@ -26,7 +23,6 @@ public class NetworkPlayer : NetworkBehaviour {
 
     [Command]
     public void CmdHasFocus(int ballNumber) {
-        testBall = FindObjectOfType<MoveOnLook>().transform;
-        testBall.Translate(0, 0, 1 * Time.deltaTime);
+        BallServer.Instace.balls[ballNumber].transform.Translate(0, 0, speed * Time.deltaTime);
     }
 }

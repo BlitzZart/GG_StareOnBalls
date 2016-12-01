@@ -7,6 +7,8 @@ public class MoveOnLook : NetworkBehaviour {
     GazeAware ga;
     NetworkPlayer serverPlayer;
 
+    public int number;
+
 	// Use this for initialization
 	void Start () {
         ga = GetComponent<GazeAware>();
@@ -34,16 +36,12 @@ public class MoveOnLook : NetworkBehaviour {
     void Update() {
         if (ga.HasGazeFocus) {
             if (!isServer) {
-                SelfPlayer().CmdHasFocus(1);
+                SelfPlayer().CmdHasFocus(number);
             }
 
             else {
                 transform.Translate(0, 0, 1 * Time.deltaTime);
             }
-
         }
     }
-
-
-
 }
