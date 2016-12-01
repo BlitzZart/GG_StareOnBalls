@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 public class NetworkPlayer : NetworkBehaviour {
 
-    public float speed = 1.0f;
+    private NW_Ball currentBall;
 
     #region unity callbacks
     void Start() {
@@ -14,10 +14,6 @@ public class NetworkPlayer : NetworkBehaviour {
             camTrans.position = new Vector3(camTrans.position.x, camTrans.position.y, -camTrans.position.z);
         }
     }
-
-    void Update() {
-
-    }
     #endregion
 
     #region public
@@ -26,10 +22,21 @@ public class NetworkPlayer : NetworkBehaviour {
     }
     #endregion
 
+    #region private
+
+    #endregion
+
     #region network
-    [Command]
-    public void CmdHasFocus(int ballNumber) {
-        BallServer.Instace.balls[ballNumber].transform.Translate(0, 0, -speed * Time.deltaTime);
+    [Command] // player 2 looks at ball
+    public void CmdHasFocus(int ballNumber, bool hasFocus) {
+        NW_Ball ball = BallServer.Instace.balls[ballNumber];
+
+        if (ball == null) {
+            currentBall = null;
+            return;
+        }
+
+        ball.p2HasFocus = hasFocus;
     }
 
     [Command]
@@ -42,5 +49,13 @@ public class NetworkPlayer : NetworkBehaviour {
         if(!isServer)
             UsePowerUp(type);
     }
+
+    [ClientRpc]
+    public void RpcUpdateScore(int score1, int score2) {
+        GameLogic.Instance.score1 = score1;
+        GameLogic.Instance.score2 = score2;
+        GameLogic.Instance.UpdateUI();
+    }
+
     #endregion
 }

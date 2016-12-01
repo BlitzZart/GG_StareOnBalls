@@ -10,8 +10,10 @@ public class BallServer : NetworkBehaviour {
         get { return instance; }
     }
 
-    public List<MoveOnLook> balls;
+    public float ballSpeed = 1.7f;
+    public List<NW_Ball> balls;
     public GameObject ballPrefab;
+    public GameObject gameLogicPrefab;
     bool started = false;
 
     void Awake() {
@@ -20,7 +22,7 @@ public class BallServer : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        balls = new List<MoveOnLook>();
+        balls = new List<NW_Ball>();
     }
 
 
@@ -38,10 +40,14 @@ public class BallServer : NetworkBehaviour {
     }
 
     private void StartUpHost() {
+        GameObject gl = Instantiate(gameLogicPrefab);
+        NetworkServer.Spawn(gl);
+
         for (int i = 0; i < 5; i++) {
             GameObject obj = Instantiate(ballPrefab, ballPrefab.transform.position + i * Vector3.right * 3.5f, Quaternion.identity) as GameObject;
 
-            MoveOnLook nb = obj.GetComponent<MoveOnLook>();
+            NW_Ball nb = obj.GetComponent<NW_Ball>();
+            nb.speed = ballSpeed;
             nb.number = i;
             balls.Add(nb);
 
