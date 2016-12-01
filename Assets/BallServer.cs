@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using System.Collections.Generic;
 
 public class BallServer : NetworkBehaviour {
     private static BallServer instance;
@@ -9,7 +10,7 @@ public class BallServer : NetworkBehaviour {
         get { return instance; }
     }
 
-    public MoveOnLook[] balls;
+    public List<MoveOnLook> balls;
     public GameObject ballPrefab;
     bool started = false;
 
@@ -19,7 +20,7 @@ public class BallServer : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        balls = new List<MoveOnLook>();
     }
 
 
@@ -38,6 +39,7 @@ public class BallServer : NetworkBehaviour {
 
             MoveOnLook nb = obj.GetComponent<MoveOnLook>();
             nb.number = i;
+            balls.Add(nb);
 
             NetworkServer.Spawn(obj);
         }

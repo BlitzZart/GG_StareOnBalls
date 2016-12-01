@@ -7,6 +7,7 @@ public class MoveOnLook : NetworkBehaviour {
     GazeAware ga;
     NetworkPlayer serverPlayer;
 
+    [SyncVar]
     public int number;
 
 	// Use this for initialization

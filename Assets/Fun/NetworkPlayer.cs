@@ -12,7 +12,6 @@ public class NetworkPlayer : NetworkBehaviour {
             Transform camTrans = Camera.main.transform;
             camTrans.rotation = Quaternion.Euler(50, 180, 0);
             camTrans.position = new Vector3(camTrans.position.x, camTrans.position.y, -camTrans.position.z);
-            speed = -speed;
         }
 	}
 	
@@ -23,6 +22,6 @@ public class NetworkPlayer : NetworkBehaviour {
 
     [Command]
     public void CmdHasFocus(int ballNumber) {
-        BallServer.Instace.balls[ballNumber].transform.Translate(0, 0, speed * Time.deltaTime);
+        BallServer.Instace.balls[ballNumber].transform.Translate(0, 0, -speed * Time.deltaTime);
     }
 }
