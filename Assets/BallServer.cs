@@ -3,18 +3,22 @@ using System.Collections;
 using UnityEngine.Networking;
 
 public class BallServer : NetworkBehaviour {
+    private BallServer instance;
+    //public BallServer Instace
+
 
     public GameObject ballPrefab;
+    bool started = false;
 
-	// Use this for initialization
-	void Start () {
+    
+
+    // Use this for initialization
+    void Start () {
 
 
     }
 
 
-
-    bool started = false;
 	// Update is called once per frame
 	void Update () {
 	    if (!started && Input.GetKeyDown(KeyCode.Space)) {

@@ -10,6 +10,12 @@ public class NetworkPlayer : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        if (isClient) {
+            Transform camTrans = Camera.main.transform;
+            camTrans.rotation = Quaternion.Euler(50, 180, 0);
+            camTrans.position = new Vector3(camTrans.position.x, camTrans.position.y, -camTrans.position.z);
+        }
+
 
 	}
 	
@@ -20,7 +26,6 @@ public class NetworkPlayer : NetworkBehaviour {
 
     [Command]
     public void CmdHasFocus(int ballNumber) {
-        Debug.LogError("cmdHasFocus");
         testBall = FindObjectOfType<MoveOnLook>().transform;
         testBall.Translate(0, 0, 1 * Time.deltaTime);
     }

@@ -5,17 +5,16 @@ using UnityEngine.Networking;
 
 public class MoveOnLook : NetworkBehaviour {
     GazeAware ga;
-
     NetworkPlayer serverPlayer;
 
 	// Use this for initialization
 	void Start () {
         ga = GetComponent<GazeAware>();
 
-        ServerPlayer();
+        SelfPlayer();
 	}
 
-    NetworkPlayer ServerPlayer() {
+    NetworkPlayer SelfPlayer() {
         NetworkPlayer[] nwp = FindObjectsOfType<NetworkPlayer>();
 
         if (serverPlayer != null)
@@ -35,12 +34,10 @@ public class MoveOnLook : NetworkBehaviour {
     void Update() {
         if (ga.HasGazeFocus) {
             if (!isServer) {
-                Debug.LogError("!isServer");
-                ServerPlayer().CmdHasFocus(1);
+                SelfPlayer().CmdHasFocus(1);
             }
 
             else {
-                Debug.LogError("isServer");
                 transform.Translate(0, 0, 1 * Time.deltaTime);
             }
 
