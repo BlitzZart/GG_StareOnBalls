@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class NW_Ball : NetworkBehaviour {
     private GazeAware _gaze;
+    private MeshDeformer _meshDeformer;
     private bool _mouseIsDown;
     [SyncVar]
     public int number;
@@ -13,10 +14,12 @@ public class NW_Ball : NetworkBehaviour {
     public bool p1HasFocus, p2HasFocus;
 
     public float speed = 0.1f;
+    private float rotationSpeed = 37;
 
     // Use this for initialization
     void Start() {
         _gaze = GetComponent<GazeAware>();
+        _meshDeformer = GetComponent<MeshDeformer>();
     }
 
     void OnMouseDown() {
@@ -54,6 +57,7 @@ public class NW_Ball : NetworkBehaviour {
     }
 
     private void DoMovenent() {
+        DoMeshDeformation();
         if (!Communicator.Player.isServer)
             return;
 
@@ -64,6 +68,17 @@ public class NW_Ball : NetworkBehaviour {
         }
         else if (p2HasFocus) {
             transform.Translate(0, 0, -speed * Time.deltaTime);
+        }
+    }
+
+    private void DoMeshDeformation() {
+        if (p1HasFocus && p2HasFocus) {
+            _meshDeformer.power = 7;
+        }
+        else if (p1HasFocus || p2HasFocus) {
+            _meshDeformer.power = 3;
+        } else {
+            _meshDeformer.power = 0;
         }
     }
 }

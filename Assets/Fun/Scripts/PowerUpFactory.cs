@@ -4,7 +4,7 @@ using UnityStandardAssets.ImageEffects;
 
 public class PowerUpFactory : MonoBehaviour {
     private MonoBehaviour _skyboxRotator, _edgeDetection, _grayscale;
-    private float duration = 2;
+    private float duration = 4;
 
     private static PowerUpFactory _instance;
 

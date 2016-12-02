@@ -4,41 +4,57 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 public class BallServer : NetworkBehaviour {
+    public delegate void BallServerDelegate();
+    public static event BallServerDelegate EventGameStarted;
+
     private static BallServer instance;
     public static BallServer Instace
     {
         get { return instance; }
     }
 
+    public MonoBehaviour startGameText;
+
     public float ballSpeed = 1.7f;
     public List<NW_Ball> balls;
     public GameObject ballPrefab;
     public GameObject gameLogicPrefab;
-    bool started = false;
+    private bool _gameStarted = false;
 
+    #region unity callbacks
     void Awake() {
         instance = this;
     }
 
-    // Use this for initialization
     void Start () {
         balls = new List<NW_Ball>();
     }
 
+    void Update() {
+        if (!_gameStarted) {
+            if (Communicator.Player != null && Communicator.Player.isServer) {
+                startGameText.enabled = true;
+                if (Input.GetKeyDown(KeyCode.Space)) {
+                    _gameStarted = true;
 
-	// Update is called once per frame
-	void Update () {
-	    if (!started && Input.GetKeyDown(KeyCode.Space)) {
-            started = true;
-            StartUpHost();
+                    StartUpHost();
+                }
+            }
+            if (_gameStarted) {
+                StartCoroutine(StartGameDelayed());
+            }
         }
-	}
+    }
+    #endregion
 
+    #region public
     public void SpawnObject(GameObject toSpawn, Vector3 pos) {
         GameObject go = (GameObject)Instantiate(toSpawn, pos, toSpawn.transform.rotation);
         NetworkServer.Spawn(go);
     }
+    #endregion
 
+    #region private
     private void StartUpHost() {
         GameObject gl = Instantiate(gameLogicPrefab);
         NetworkServer.Spawn(gl);
@@ -53,5 +69,14 @@ public class BallServer : NetworkBehaviour {
 
             NetworkServer.Spawn(obj);
         }
+        startGameText.enabled = false;
     }
+
+    IEnumerator StartGameDelayed() {
+        yield return new WaitForSeconds(0.5f);
+        if (EventGameStarted != null)
+            EventGameStarted();
+    }
+
+    #endregion
 }

@@ -13,6 +13,10 @@ public class NetworkPlayer : NetworkBehaviour {
             camTrans.rotation = Quaternion.Euler(50, 180, 0);
             camTrans.position = new Vector3(camTrans.position.x, camTrans.position.y, -camTrans.position.z);
         }
+        BallServer.EventGameStarted += OnGameStarted;
+    }
+    void OnDestroy() {
+        BallServer.EventGameStarted -= OnGameStarted;
     }
     #endregion
 
@@ -23,7 +27,20 @@ public class NetworkPlayer : NetworkBehaviour {
     #endregion
 
     #region private
+    private void OnGameStarted() {
+        if (!isServer)
+            return;
+        GameStarted();
+        RpcStartGame();
+    }
 
+    private void GameStarted() {
+        NetworkManagerHUD hud = FindObjectOfType<NetworkManagerHUD>();
+        if (hud == null)
+            return;
+
+        hud.enabled = false;
+    }
     #endregion
 
     #region network
@@ -35,7 +52,6 @@ public class NetworkPlayer : NetworkBehaviour {
             currentBall = null;
             return;
         }
-
         ball.p2HasFocus = hasFocus;
     }
 
@@ -57,5 +73,9 @@ public class NetworkPlayer : NetworkBehaviour {
         GameLogic.Instance.UpdateUI();
     }
 
+    [ClientRpc]
+    public void RpcStartGame() {
+        GameStarted();
+    }
     #endregion
 }

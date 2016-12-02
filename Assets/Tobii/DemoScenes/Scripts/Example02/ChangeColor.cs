@@ -12,7 +12,7 @@ using Tobii.EyeTracking;
 [RequireComponent(typeof(MeshRenderer))]
 public class ChangeColor : MonoBehaviour {
 
-    public Color selectionColor;
+    public Color selectionColor, deselectionColor;
  
     private GazeAware       _gazeAwareComponent;
     private MeshRenderer    _meshRenderer;
@@ -29,7 +29,7 @@ public class ChangeColor : MonoBehaviour {
         _gazeAwareComponent = GetComponent<GazeAware>();
         _meshRenderer = GetComponent<MeshRenderer>();
         _lerpColor = _meshRenderer.material.color;
-        _deselectionColor = Color.white;
+        _deselectionColor = deselectionColor;//Color.white;
     }
 
     /// <summary>
