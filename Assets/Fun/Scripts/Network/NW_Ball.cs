@@ -3,7 +3,10 @@ using System.Collections;
 using Tobii.EyeTracking;
 using UnityEngine.Networking;
 
+public delegate void BoolDelegate(bool value);
 public class NW_Ball : NetworkBehaviour {
+    public static event BoolDelegate EventFocusChanged;
+
     private GazeAware _gaze;
     private MeshDeformer _meshDeformer;
     private bool _mouseIsDown;
@@ -40,6 +43,10 @@ public class NW_Ball : NetworkBehaviour {
     private void CheckGaze() {
         if (_gaze.HasGazeFocus || _mouseIsDown) {
             if (isServer) {
+                if (!p1HasFocus)
+                    if (EventFocusChanged != null)
+                        EventFocusChanged(true);
+
                 p1HasFocus = true;
             }
             else if (!p2HasFocus) {
