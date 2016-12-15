@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class BallServer : NetworkBehaviour {
     public delegate void BallServerDelegate();
@@ -19,7 +20,7 @@ public class BallServer : NetworkBehaviour {
     public List<NW_Ball> balls;
     public GameObject ballPrefab;
     public GameObject gameLogicPrefab;
-    private bool _gameStarted = false;
+    public bool _gameStarted = false;
 
     #region unity callbacks
     void Awake() {
@@ -28,6 +29,11 @@ public class BallServer : NetworkBehaviour {
 
     void Start () {
         balls = new List<NW_Ball>();
+    }
+
+    private void OnLevelWasLoaded(int level) {
+        _gameStarted = false;
+        startGameText = FindObjectOfType<UI_StartText>().GetComponent<Text>();
     }
 
     void Update() {

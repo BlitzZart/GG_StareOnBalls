@@ -7,6 +7,7 @@ public delegate void BoolDelegate(bool value);
 public class NW_Ball : NetworkBehaviour {
     public static event BoolDelegate EventFocusChanged;
 
+    private Rigidbody _body;
     private GazeAware _gaze;
     private MeshDeformer _meshDeformer;
     private bool _mouseIsDown;
@@ -19,8 +20,9 @@ public class NW_Ball : NetworkBehaviour {
     public float speed = 0.1f;
     private float rotationSpeed = 37;
 
-    // Use this for initialization
+
     void Start() {
+        _body = GetComponent<Rigidbody>();
         _gaze = GetComponent<GazeAware>();
         _meshDeformer = GetComponent<MeshDeformer>();
     }
@@ -31,7 +33,6 @@ public class NW_Ball : NetworkBehaviour {
         }
     }
 
-    // Update is called once per frame
     void Update() {
         if (Input.GetMouseButtonUp(0))
             _mouseIsDown = false;
@@ -39,6 +40,7 @@ public class NW_Ball : NetworkBehaviour {
         CheckGaze();
         DoMovenent();
     }
+
 
     private void CheckGaze() {
         if (_gaze.HasGazeFocus || _mouseIsDown) {
@@ -63,12 +65,20 @@ public class NW_Ball : NetworkBehaviour {
         }
     }
 
+    private void KillForces() {
+        if (_body.velocity.sqrMagnitude != 0) {
+            print(_body.velocity.sqrMagnitude);
+            _body.velocity = Vector3.zero;
+        }
+    }
+
     private void DoMovenent() {
         DoMeshDeformation();
         if (!Communicator.Player.isServer)
             return;
 
         if (p1HasFocus && p2HasFocus) {
+            KillForces();
         }
         else if (p1HasFocus) {
             transform.Translate(0, 0, speed * Time.deltaTime);

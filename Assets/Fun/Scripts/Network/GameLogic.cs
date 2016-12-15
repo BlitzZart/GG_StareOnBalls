@@ -13,6 +13,7 @@ public class GameLogic : NetworkBehaviour {
     [SyncVar]
     public int score1, score2;
     public Text score1Text, score2Text, gameOverText;
+    private bool gameOver = false;
 
     #region unity callbacks
     void Awake() {
@@ -22,6 +23,7 @@ public class GameLogic : NetworkBehaviour {
     void Start() {
         CheckPointCollider.EventMadePoint += OnMadePoint;
         //BallServer.EventGameStarted += OnGameStarted;
+        gameOver = false;
     }
 
     void OnDestroy() {
@@ -35,7 +37,7 @@ public class GameLogic : NetworkBehaviour {
     private void CheckVictory() {
         if (score1 >= 3 || score2 >= 3) {
             gameOverText.enabled = true;
-
+            gameOver = true;
             if (score1 > score2)
                 gameOverText.text = "Player 1 Wins";
             else

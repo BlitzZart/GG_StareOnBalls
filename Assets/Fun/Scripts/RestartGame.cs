@@ -4,15 +4,15 @@ using UnityEngine.SceneManagement;
 
 public class RestartGame : MonoBehaviour {
 
-	// Use this for initialization
 	void Start () {
-	
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
-	    if (Input.GetKeyDown(KeyCode.R)) {
-            SceneManager.LoadScene("funfunfun");
+        if (Input.GetKeyDown(KeyCode.R)) {
+            if (Input.GetKey(KeyCode.AltGr) || 
+                Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) || 
+                Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand))
+                SceneManager.LoadScene("funfunfun");
         }
 	}
 }

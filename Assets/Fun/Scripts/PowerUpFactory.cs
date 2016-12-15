@@ -2,9 +2,12 @@
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
 
+
+// always implement activation and deactivation in one method
+// because it gets called again for deactivation - automatically
 public class PowerUpFactory : MonoBehaviour {
-    private MonoBehaviour _skyboxRotator, _edgeDetection, _grayscale;
-    private float duration = 4;
+    private MonoBehaviour _skyboxRotator, _edgeDetection, _grayscale, _blur;
+    private float duration = 4.7f;
 
     private static PowerUpFactory _instance;
 
@@ -35,6 +38,12 @@ public class PowerUpFactory : MonoBehaviour {
             case PowerUpType.GreyScale:
                 MonoBehaviorActivator(_grayscale, type, enable);
                 break;
+            case PowerUpType.FlipCamera:
+                FlipCamera(type, enable);
+                break;
+            case PowerUpType.Blur:
+                MonoBehaviorActivator(_blur, type, enable);
+                break;
         }
     }
 
@@ -42,10 +51,11 @@ public class PowerUpFactory : MonoBehaviour {
         _skyboxRotator = FindObjectOfType<SkyboxRotator>();
         _edgeDetection = FindObjectOfType<EdgeDetection>();
         _grayscale = FindObjectOfType<Grayscale>();
+        _blur = FindObjectOfType<Blur>();
     }
 
     private void MonoBehaviorActivator(MonoBehaviour comp, PowerUpType type, bool enable) {
-        Debug.LogError("POWERUP " + type.ToString() + " > " + enable);
+        //Debug.LogError("POWERUP " + type.ToString() + " > " + enable);
         if (enable) {
             comp.enabled = true;
             StartCoroutine(StopPowerUp(type));
@@ -54,6 +64,18 @@ public class PowerUpFactory : MonoBehaviour {
         }
     }
 
+    int rotCamDir = 1;
+    private void FlipCamera(PowerUpType type, bool flip) {
+        Transform camTrans = Camera.main.transform;
+        Vector3 eulerRot = camTrans.transform.rotation.eulerAngles;
+        if (flip) {
+            camTrans.transform.rotation = Quaternion.Euler(eulerRot.x, eulerRot.y, 90 * (Random.Range(1, 3) * rotCamDir));
+            rotCamDir = -rotCamDir;
+            StartCoroutine(StopPowerUp(type));
+        } else {
+            camTrans.transform.rotation = Quaternion.Euler(eulerRot.x, eulerRot.y, 0);
+        }
+    }
 
     private IEnumerator StopPowerUp(PowerUpType type) {
         yield return new WaitForSeconds(duration);

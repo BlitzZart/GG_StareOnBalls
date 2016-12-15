@@ -39,7 +39,7 @@ public class NetworkPlayer : NetworkBehaviour {
         if (hud == null)
             return;
 
-        hud.enabled = false;
+        hud.showGUI = false;
     }
     #endregion
 

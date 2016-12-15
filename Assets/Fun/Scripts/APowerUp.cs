@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public enum PowerUpType {
-    SkyboxRotator, EdgeDetection, GreyScale
+    SkyboxRotator, EdgeDetection, GreyScale, FlipCamera, Blur
 }
 namespace Assets.Fun {
     public class APowerUp : MonoBehaviour {
