@@ -28,9 +28,10 @@ public class BallServer : NetworkBehaviour {
     public GameObject[] powerupPrefab;
     public Transform[] spawnAreas;
 
+    private float _minSpawnRate = 3.1f;
     private float _spawnPowerUpRate = 10;
     private float _spawnPowerUpRateRandom = 1;
-    private float _spawnPowerUpRateDecrase = 0.2f;
+    private float _spawnPowerUpRateDecrase = 0.333f;
 
     private Timer _spawnPowerupTimer;
 
@@ -39,7 +40,7 @@ public class BallServer : NetworkBehaviour {
         instance = this;
     }
 
-    void Start () {
+    void Start() {
         balls = new List<NW_Ball>();
     }
 
@@ -100,7 +101,7 @@ public class BallServer : NetworkBehaviour {
     IEnumerator StartGameDelayed() {
         yield return new WaitForSeconds(0.5f);
 
-        _spawnPowerupTimer = Timer.CreateTimer(gameObject, _spawnPowerUpRate, () => { SpawnPowerUp(); } );
+        _spawnPowerupTimer = Timer.CreateTimer(gameObject, _spawnPowerUpRate, () => { SpawnPowerUp(); });
 
         if (EventGameStarted != null)
             EventGameStarted();
@@ -122,8 +123,12 @@ public class BallServer : NetworkBehaviour {
 
         NetworkServer.Spawn(go);
 
-        if (_spawnPowerupTimer.interval > 3)
+        if (_spawnPowerupTimer.interval > _minSpawnRate)
             _spawnPowerupTimer.interval -= _spawnPowerUpRateDecrase;
+        else
+            _spawnPowerupTimer.interval = _minSpawnRate;
+
+        print("  " + _spawnPowerupTimer.interval);
     }
 
     #endregion
