@@ -54,6 +54,10 @@ public class ChangeColor : MonoBehaviour {
         }
     }
 
+    public void SetDeselectionColor(Color c) {
+        _deselectionColor = c;
+    }
+
     /// <summary>
     /// Update the color, which should used for the lerping
     /// </summary>

@@ -21,8 +21,11 @@ public class NetworkPlayer : NetworkBehaviour {
     #endregion
 
     #region public
-    public void UsePowerUp(PowerUpType type) {
+    public void UsePowerUp(PowerUpType type, GameObject go) {
         PowerUpFactory.ActivatePowerUp(type);
+
+        if (go != null)
+            NetworkServer.Destroy(go);
     }
     #endregion
 
@@ -56,14 +59,14 @@ public class NetworkPlayer : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdUsePowerUpOnEnemy(PowerUpType type) {
-        UsePowerUp(type);
+    public void CmdUsePowerUpOnEnemy(PowerUpType type, NetworkInstanceId nid) {
+        UsePowerUp(type, NetworkServer.FindLocalObject(nid));
     }
 
     [ClientRpc]
-    public void RpcUsePowerUpOnEnemy(PowerUpType type) {
+    public void RpcUsePowerUpOnEnemy(PowerUpType type, NetworkInstanceId nid) {
         if(!isServer)
-            UsePowerUp(type);
+            UsePowerUp(type, null);
     }
 
     [ClientRpc]
@@ -77,5 +80,11 @@ public class NetworkPlayer : NetworkBehaviour {
     public void RpcStartGame() {
         GameStarted();
     }
+
+    [Command]
+    public void CmdDestroyObject(NetworkInstanceId nid) {
+        NetworkServer.Destroy(NetworkServer.FindLocalObject(nid));
+    }
+
     #endregion
 }

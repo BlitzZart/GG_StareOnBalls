@@ -69,7 +69,7 @@ public class PowerUpFactory : MonoBehaviour {
         Transform camTrans = Camera.main.transform;
         Vector3 eulerRot = camTrans.transform.rotation.eulerAngles;
         if (flip) {
-            camTrans.transform.rotation = Quaternion.Euler(eulerRot.x, eulerRot.y, 90 * (Random.Range(1, 3) * rotCamDir));
+            camTrans.transform.rotation = Quaternion.Euler(eulerRot.x, eulerRot.y, 180);
             rotCamDir = -rotCamDir;
             StartCoroutine(StopPowerUp(type));
         } else {

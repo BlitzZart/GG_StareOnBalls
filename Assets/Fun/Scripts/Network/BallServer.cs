@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Assets.Fun;
 
 public class BallServer : NetworkBehaviour {
     public delegate void BallServerDelegate();
@@ -20,7 +21,18 @@ public class BallServer : NetworkBehaviour {
     public List<NW_Ball> balls;
     public GameObject ballPrefab;
     public GameObject gameLogicPrefab;
+
     public bool _gameStarted = false;
+    public bool _gameRunning = false;
+
+    public GameObject[] powerupPrefab;
+    public Transform[] spawnAreas;
+
+    private float _spawnPowerUpRate = 10;
+    private float _spawnPowerUpRateRandom = 1;
+    private float _spawnPowerUpRateDecrase = 0.2f;
+
+    private Timer _spawnPowerupTimer;
 
     #region unity callbacks
     void Awake() {
@@ -33,6 +45,7 @@ public class BallServer : NetworkBehaviour {
 
     private void OnLevelWasLoaded(int level) {
         _gameStarted = false;
+        _gameRunning = false;
         startGameText = FindObjectOfType<UI_StartText>().GetComponent<Text>();
     }
 
@@ -51,12 +64,18 @@ public class BallServer : NetworkBehaviour {
             }
         }
     }
+
+    private void OnDestroy() {
+
+    }
     #endregion
 
     #region public
     public void SpawnObject(GameObject toSpawn, Vector3 pos) {
         GameObject go = (GameObject)Instantiate(toSpawn, pos, toSpawn.transform.rotation);
         NetworkServer.Spawn(go);
+
+
     }
     #endregion
 
@@ -80,8 +99,31 @@ public class BallServer : NetworkBehaviour {
 
     IEnumerator StartGameDelayed() {
         yield return new WaitForSeconds(0.5f);
+
+        _spawnPowerupTimer = Timer.CreateTimer(gameObject, _spawnPowerUpRate, () => { SpawnPowerUp(); } );
+
         if (EventGameStarted != null)
             EventGameStarted();
+    }
+
+    private void SpawnPowerUp() {
+        GameObject go = Instantiate(powerupPrefab[Random.Range(0, powerupPrefab.Length)]);
+
+        APowerUp currentType = go.GetComponent<APowerUp>();
+
+        //NW_PowerUp pu = go.GetComponent<NW_PowerUp>();
+        //pu.Init();
+
+        Transform spawnVolume = spawnAreas[Random.Range(0, spawnAreas.Length)].transform;
+        Vector3 pos = spawnVolume.position + new Vector3(Random.Range(-spawnVolume.transform.localScale.x, spawnVolume.transform.localScale.x),
+            Random.Range(-spawnVolume.transform.localScale.y, spawnVolume.transform.localScale.y),
+            Random.Range(-spawnVolume.transform.localScale.z, spawnVolume.transform.localScale.z));
+        go.transform.position = pos;
+
+        NetworkServer.Spawn(go);
+
+        if (_spawnPowerupTimer.interval > 3)
+            _spawnPowerupTimer.interval -= _spawnPowerUpRateDecrase;
     }
 
     #endregion
