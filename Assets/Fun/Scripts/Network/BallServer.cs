@@ -15,7 +15,7 @@ public class BallServer : NetworkBehaviour {
         get { return instance; }
     }
 
-    public MonoBehaviour startGameText, loadingText;
+    public MonoBehaviour startGameText, loadingText, waitingText;
     public GameObject loadingBalls;
 
     public float ballSpeed = 1.7f;
@@ -26,9 +26,11 @@ public class BallServer : NetworkBehaviour {
     public bool _gameStarted = false;
     public bool _gameRunning = false;
 
+
     public GameObject[] powerupPrefab;
     public GameObject[] spawnAreas;
 
+    private bool _waitForPlayer = true;
     private float _minSpawnRate = 3.1f;
     private float _spawnPowerUpRate = 10;
     private float _spawnPowerUpRateRandom = 1;
@@ -43,6 +45,7 @@ public class BallServer : NetworkBehaviour {
 
     void Start() {
         balls = new List<NW_Ball>();
+        StartCoroutine(CheckPlayers());
     }
 
     //private void OnLevelWasLoaded(int level) {
@@ -64,10 +67,11 @@ public class BallServer : NetworkBehaviour {
                     Destroy(loadingBalls);
             }
 
-            if (Communicator.Player != null && Communicator.Player.isServer) {
+            if (Communicator.Player != null && Communicator.Player.isServer && !_waitForPlayer) {
                 startGameText.enabled = true;
 
-                if (Input.GetKeyDown(KeyCode.Space)) {
+                // start on space + check if both players are ready
+                if (Input.GetKeyDown(KeyCode.Space) && !_waitForPlayer) {
                     _gameStarted = true;
 
                     StartUpHost();
@@ -88,12 +92,31 @@ public class BallServer : NetworkBehaviour {
     public void SpawnObject(GameObject toSpawn, Vector3 pos) {
         GameObject go = (GameObject)Instantiate(toSpawn, pos, toSpawn.transform.rotation);
         NetworkServer.Spawn(go);
-
-
     }
     #endregion
 
     #region private
+    private IEnumerator CheckPlayers() {
+        while (true) {
+            NetworkPlayer[] nwp = FindObjectsOfType<NetworkPlayer>();
+
+            if (nwp == null || nwp.Length < 2)
+                _waitForPlayer = true;
+            else
+                _waitForPlayer = false;
+
+            if (loadingText != null && loadingText.enabled == false)
+                waitingText.enabled = _waitForPlayer;
+
+            // restart client if server is gone
+
+
+
+
+            yield return new WaitForSeconds(0.66f);
+        }
+    }
+
     private void StartUpHost() {
         GameObject gl = Instantiate(gameLogicPrefab);
         NetworkServer.Spawn(gl);

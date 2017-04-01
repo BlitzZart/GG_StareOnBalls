@@ -12,7 +12,7 @@ public class GameLogic : NetworkBehaviour {
     }
     [SyncVar]
     public int score1, score2;
-    public Text score1Text, score2Text, gameOverText;
+    public Text score1Text, score2Text, gameOverText, pressEnterText;
     private bool gameOver = false;
 
     #region unity callbacks
@@ -26,6 +26,11 @@ public class GameLogic : NetworkBehaviour {
         gameOver = false;
     }
 
+    private void Update() {
+        if (gameOver && Input.GetKeyDown(KeyCode.Return)) {
+            RestartGame.RestartNow();
+        }
+    }
     void OnDestroy() {
         CheckPointCollider.EventMadePoint -= OnMadePoint;
         //BallServer.EventGameStarted -= OnGameStarted;
@@ -37,6 +42,7 @@ public class GameLogic : NetworkBehaviour {
     private void CheckVictory() {
         if (score1 >= 3 || score2 >= 3) {
             gameOverText.enabled = true;
+            pressEnterText.enabled = true;
             gameOver = true;
             if (score1 > score2)
                 gameOverText.text = "Player 1 Wins";

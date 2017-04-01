@@ -14,7 +14,7 @@ public class SkyboxRotator : MonoBehaviour {
 	}
 
     private void OnEnable() {
-        _randomSpeed = Random.Range(0.01f, 0.1f);
+        _randomSpeed = Random.Range(0.03f, 0.3f);
         _direction = -_direction;
     }
 

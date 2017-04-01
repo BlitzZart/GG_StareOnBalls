@@ -14,16 +14,22 @@ public class RestartGame : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            DoRestart();
-        }
+        //if (Input.GetKeyDown(KeyCode.R)) {
+        //    DoRestart();
+        //}
     }
 
-    private void DoRestart() {
+    public void DoRestart() {
+        NW_Discovery.StopDiscovery();
         NetworkManager nwm = FindObjectOfType<NetworkManager>();
         nwm.StopClient();
         nwm.StopHost();
 
-        SceneManager.LoadScene("start");
+        StartCoroutine(LoadDelayed());
+    }
+
+    private IEnumerator LoadDelayed() {
+        yield return new WaitForSeconds(0.333f);
+        SceneManager.LoadScene("init");
     }
 }
