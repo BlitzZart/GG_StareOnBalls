@@ -3,13 +3,21 @@ using System.Collections;
 using UnityEngine.Networking;
 
 public class ShowNwManagerHUDToggle : MonoBehaviour {
+    private static ShowNwManagerHUDToggle instance;
     NetworkManagerHUD nwmHUD;
-	// Use this for initialization
-	void Start () {
+    
+    private void Awake() {
+        instance = this;
+    }
+
+    void Start () {
         nwmHUD = FindObjectOfType<NetworkManagerHUD>();
 	}
 	
-	// Update is called once per frame
+    public static void ShowUI(bool val) {
+        instance.nwmHUD.showGUI = val;
+    }
+
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Escape))
             nwmHUD.showGUI = !nwmHUD.showGUI;

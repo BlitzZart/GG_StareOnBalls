@@ -1,18 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class RestartGame : MonoBehaviour {
+    private static RestartGame instance;
+    void Awake() {
+        instance = this;
+    }
 
-	void Start () {
-	}
+    public static void RestartNow() {
+        instance.DoRestart();
+    }
 
-	void Update () {
+    void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
-            //if (Input.GetKey(KeyCode.AltGr) || 
-            //    Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) || 
-            //    Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand))
-                SceneManager.LoadScene("funfunfun");
+            DoRestart();
         }
-	}
+    }
+
+    private void DoRestart() {
+        NetworkManager nwm = FindObjectOfType<NetworkManager>();
+        nwm.StopClient();
+        nwm.StopHost();
+
+        SceneManager.LoadScene("start");
+    }
 }

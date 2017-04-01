@@ -11,6 +11,11 @@ public class LoadScene : MonoBehaviour
     /// </remarks>
     public void Load(string sceneName)
     {
+        if (sceneName == "quit") {
+            Application.Quit();
+            return;
+        }
+        
 #if UNITY_5_3 || UNITY_5_3_OR_NEWER
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
 #else

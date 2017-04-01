@@ -15,7 +15,8 @@ public class BallServer : NetworkBehaviour {
         get { return instance; }
     }
 
-    public MonoBehaviour startGameText;
+    public MonoBehaviour startGameText, loadingText;
+    public GameObject loadingBalls;
 
     public float ballSpeed = 1.7f;
     public List<NW_Ball> balls;
@@ -44,20 +45,28 @@ public class BallServer : NetworkBehaviour {
         balls = new List<NW_Ball>();
     }
 
-    private void OnLevelWasLoaded(int level) {
-        _gameStarted = false;
-        _gameRunning = false;
-        startGameText = FindObjectOfType<UI_StartText>().GetComponent<Text>();
-        spawnAreas = null;
-        spawnAreas = new GameObject[3];
-        spawnAreas = GameObject.FindGameObjectsWithTag("Spawn");
-        _spawnPowerupTimer.StopTimer();
-    }
+    //private void OnLevelWasLoaded(int level) {
+    //    _gameStarted = false;
+    //    _gameRunning = false;
+    //    startGameText = FindObjectOfType<UI_StartText>().GetComponent<Text>();
+    //    spawnAreas = null;
+    //    spawnAreas = new GameObject[3];
+    //    spawnAreas = GameObject.FindGameObjectsWithTag("Spawn");
+    //    if (_spawnPowerupTimer != null)
+    //        _spawnPowerupTimer.StopTimer();
+    //}
 
     void Update() {
         if (!_gameStarted) {
+            if (Communicator.Player != null) {
+                loadingText.enabled = false;
+                if (loadingBalls != null)
+                    Destroy(loadingBalls);
+            }
+
             if (Communicator.Player != null && Communicator.Player.isServer) {
                 startGameText.enabled = true;
+
                 if (Input.GetKeyDown(KeyCode.Space)) {
                     _gameStarted = true;
 
