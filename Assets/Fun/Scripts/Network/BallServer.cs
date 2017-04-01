@@ -26,12 +26,12 @@ public class BallServer : NetworkBehaviour {
     public bool _gameRunning = false;
 
     public GameObject[] powerupPrefab;
-    public Transform[] spawnAreas;
+    public GameObject[] spawnAreas;
 
     private float _minSpawnRate = 3.1f;
     private float _spawnPowerUpRate = 10;
     private float _spawnPowerUpRateRandom = 1;
-    private float _spawnPowerUpRateDecrase = 0.333f;
+    private float _spawnPowerUpRateDecrase = 0.23f;
 
     private Timer _spawnPowerupTimer;
 
@@ -48,6 +48,10 @@ public class BallServer : NetworkBehaviour {
         _gameStarted = false;
         _gameRunning = false;
         startGameText = FindObjectOfType<UI_StartText>().GetComponent<Text>();
+        spawnAreas = null;
+        spawnAreas = new GameObject[3];
+        spawnAreas = GameObject.FindGameObjectsWithTag("Spawn");
+        _spawnPowerupTimer.StopTimer();
     }
 
     void Update() {

@@ -43,6 +43,8 @@ public class NetworkPlayer : NetworkBehaviour {
             return;
 
         hud.showGUI = false;
+
+        SoundManager.Instance.StartMusic();
     }
     #endregion
 
@@ -74,6 +76,7 @@ public class NetworkPlayer : NetworkBehaviour {
         GameLogic.Instance.score1 = score1;
         GameLogic.Instance.score2 = score2;
         GameLogic.Instance.UpdateUI();
+        SoundManager.Instance.PlayMadePoint(2);
     }
 
     [ClientRpc]

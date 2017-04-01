@@ -9,9 +9,9 @@ public class RestartGame : MonoBehaviour {
 
 	void Update () {
         if (Input.GetKeyDown(KeyCode.R)) {
-            if (Input.GetKey(KeyCode.AltGr) || 
-                Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) || 
-                Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand))
+            //if (Input.GetKey(KeyCode.AltGr) || 
+            //    Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) || 
+            //    Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand))
                 SceneManager.LoadScene("funfunfun");
         }
 	}
