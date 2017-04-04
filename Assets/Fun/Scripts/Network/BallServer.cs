@@ -108,7 +108,7 @@ public class BallServer : NetworkBehaviour {
             if (loadingText != null && loadingText.enabled == false)
                 waitingText.enabled = _waitForPlayer;
 
-            // restart client if server is gone
+            // restart client if server is gone!!!
 
 
 

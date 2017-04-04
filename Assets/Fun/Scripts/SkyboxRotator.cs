@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class SkyboxRotator : MonoBehaviour {
+    public float fixedSpeed = 0;
+
     private Material skybox;
 
     private float _speed = 0.1f;
@@ -14,13 +16,19 @@ public class SkyboxRotator : MonoBehaviour {
 	}
 
     private void OnEnable() {
-        _randomSpeed = Random.Range(0.03f, 0.3f);
+        _randomSpeed = Random.Range(10.0f, 20.0f);
         _direction = -_direction;
     }
 
     // Update is called once per frame
     void Update () {
-        float asd = skybox.GetFloat("_Rotation");
-        skybox.SetFloat("_Rotation", asd + ((_speed + _randomSpeed) * _direction));
+        float currentRotation = skybox.GetFloat("_Rotation");
+        if (fixedSpeed == 0) {
+
+            skybox.SetFloat("_Rotation", currentRotation + ((_speed + _randomSpeed * Time.deltaTime) * _direction));
+        } else {
+            skybox.SetFloat("_Rotation", currentRotation + ((_speed + fixedSpeed * Time.deltaTime) * _direction));
+        }
+
     }
 }

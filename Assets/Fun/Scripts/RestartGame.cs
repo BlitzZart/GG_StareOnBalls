@@ -20,10 +20,14 @@ public class RestartGame : MonoBehaviour {
     }
 
     public void DoRestart() {
-        NW_Discovery.StopDiscovery();
+        
+        NW_Discovery.StopDiscovery();   
         NetworkManager nwm = FindObjectOfType<NetworkManager>();
-        nwm.StopClient();
+
         nwm.StopHost();
+        nwm.StopClient();
+        Network.Disconnect();
+        NetworkServer.Shutdown();
 
         StartCoroutine(LoadDelayed());
     }

@@ -15,28 +15,26 @@ public class StartCalibration : MonoBehaviour {
     // Use this for initialization
     void Start () {
         path = System.IO.File.ReadAllText("tobiiPath");
-        
-	}
+        //UnityEngine.Debug.LogError("PATH_ " + path);
+    }
 	
     public void StartQuickCalibration() {
-
-        
 
         try {
             Process myProcess = new Process();
             myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
             //myProcess.StartInfo.CreateNoWindow = true;
-            myProcess.StartInfo.UseShellExecute = false;
+            //myProcess.StartInfo.UseShellExecute = false;
             myProcess.StartInfo.FileName = path;
             myProcess.StartInfo.Arguments = "-quick-calibration";
-            myProcess.EnableRaisingEvents = true;
+            //myProcess.EnableRaisingEvents = true;
             myProcess.Start();
             myProcess.WaitForExit();
             int ExitCode = myProcess.ExitCode;
             //print(ExitCode);
         }
         catch (Exception e) {
-            print(e);
+            UnityEngine.Debug.LogError(e);
         }
     }
 

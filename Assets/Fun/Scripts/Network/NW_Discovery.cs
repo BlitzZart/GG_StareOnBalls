@@ -1,18 +1,19 @@
 using System.Collections;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
-    /// <summary>
-    /// NW_Discovery is a simple unet hlapi broadcast receiver script
-    /// Mode
-    ///     Both: -start listening
-    ///             -if a server suitable is broadcasting and send "found" event
-    ///             -if not - start broadcasting and send "start" event
-    ///     Server:     -start broadcasting and sedn "start" event
-    ///     Client: -start listening and send "found" if a suitable server is broadcasting
-    /// </summary>
-    public enum DiscoveryMode {
+/// <summary>
+/// NW_Discovery is a simple unet hlapi broadcast receiver script
+/// Mode
+///     Both: -start listening
+///             -if a server suitable is broadcasting and send "found" event
+///             -if not - start broadcasting and send "start" event
+///     Server:     -start broadcasting and sedn "start" event
+///     Client: -start listening and send "found" if a suitable server is broadcasting
+/// </summary>
+public enum DiscoveryMode {
         Both, Server, Client
     }
 public class NW_Discovery : NetworkDiscovery {
@@ -30,6 +31,7 @@ public class NW_Discovery : NetworkDiscovery {
         instance = this;
     }
     void Start() {
+        //NetworkServer.Reset();
         // initialize discovery
         Initialize();
         //// set data
@@ -44,7 +46,9 @@ public class NW_Discovery : NetworkDiscovery {
     }
 
     public override void OnReceivedBroadcast(string fromAddress, string data) {
-        base.OnReceivedBroadcast(fromAddress, data);
+        //base.OnReceivedBroadcast(fromAddress, data);
+        print("R " + fromAddress);
+
         // check if data is matching
         if (!data.Contains(gameName))
             return;
@@ -74,6 +78,7 @@ public class NW_Discovery : NetworkDiscovery {
 
     private IEnumerator InitiateServerStart(float delay) {
         yield return new WaitForSeconds(delay);
+        print("PENG");
 
         // stop listening
         if (isClient)
@@ -92,6 +97,10 @@ public class NW_Discovery : NetworkDiscovery {
     }
 
     public static void StopDiscovery() {
+        // check if running
+        if (!instance.isClient && !instance.isServer)
+            return;
+        print(MethodBase.GetCurrentMethod().Name);
         instance.StopBroadcast();
     }
 }

@@ -11,14 +11,12 @@ public class UI_InGameMenu : MonoBehaviour {
 	}
 
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.Return) && menu.activeSelf) {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (Communicator.Player == null || Communicator.Player.isServer)
+                menu.SetActive(!menu.activeSelf);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) && menu.activeSelf) {
             RestartGame.RestartNow();
         }
-
-
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            menu.SetActive(!menu.activeSelf);
-        }
-
-	}
+    }
 }
